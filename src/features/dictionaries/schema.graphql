@@ -1,0 +1,29 @@
+type Type {
+  id: Int!
+  name: String!
+  code: String
+}
+type Category {
+  id: Int!
+  name: String!
+  code: String
+}
+type Country {
+  id: Int!
+  name: String!
+  code: String    
+}
+type County {
+  id: Int!
+  name: String!
+  code: String    
+}
+type City {
+  id: Int!
+  name: String!
+  code: String    
+}
+type Status {
+    id: ID!
+    name: String!
+}

@@ -35,4 +35,4 @@ const getUserDataLoaders = dbInstance => {
   }
 }
 
-module.exports = { getUserDataLoaders }
+module.exports = getUserDataLoaders
