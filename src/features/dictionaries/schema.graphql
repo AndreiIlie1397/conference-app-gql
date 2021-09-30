@@ -24,6 +24,6 @@ type City {
   code: String    
 }
 type Status {
-    id: ID!
+    id: Int!
     name: String!
 }
