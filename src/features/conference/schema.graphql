@@ -50,12 +50,57 @@ input ConferenceFilterInput {
   organizerEmail: String
 }
 
-input Attendee{
+input Attendee {
   attendeeEmail: String!
   conferenceId: ID!
+}
+
+input ConferenceInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  organizerEmail: String!
+  type: TypeInput
+  category: CategoryInput
+  location: LocationInput!
+  speakers: [SpeakerInput!]!
+  deletedSpeakers: [ID]
+}
+
+input TypeInput {
+  id: Int
+  name: String!
+  code: String
+}
+
+input CategoryInput {
+  id: Int
+  name: String!
+  code: String
+}
+
+input LocationInput {
+  id: ID
+  name: String!
+  address: String
+  latitude: String
+  longitude: String
+  cityId: Int
+  countyId: Int
+  countryId: Int
+}
+
+input SpeakerInput {
+  id: ID
+  name: String!
+  nationality: String
+  rating: Float
+  isMainSpeaker: Boolean
 }
 
 extend type Mutation {
   attend(input: Attendee): AttendConference
   withdraw(input: Attendee!): Int
+  saveConference(input: ConferenceInput): Conference!
 }
