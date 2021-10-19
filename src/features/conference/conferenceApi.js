@@ -1,5 +1,4 @@
 const { RESTDataSource } = require('apollo-datasource-rest')
-const suggestedConferences = require('../../mock/suggestedConferences')
 class ConferenceApi extends RESTDataSource {
   constructor() {
     super()
@@ -7,9 +6,7 @@ class ConferenceApi extends RESTDataSource {
   }
 
   async getConferenceSuggestions(input) {
-    const { conferenceId, attendeeEmail } = input
-    //return await this.get('suggestions/list', { conferenceId, attendeeEmail })
-    return suggestedConferences
+    return await this.get('Suggestions/ListOfConference')
   }
 }
 module.exports = ConferenceApi
