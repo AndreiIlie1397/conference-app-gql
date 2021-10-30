@@ -9,8 +9,13 @@ const conferenceResolvers = {
     conference: async (_parent, { id }, { dataSources }, _info) => {
       const data = await dataSources.conferenceDb.getConferenceById(id)
       return data
+    },
+    users: async (_parent, { id }, { dataSources }, _info) => {
+      const data = await dataSources.conferenceDb.getUsers(id)
+      return data
     }
   },
+
   ConferenceList: {
     pagination: async (_parent, { pager, filters }, { dataSources }, _info) => {
       const { totalCount } = await dataSources.conferenceDb.getConferenceListTotalCount(filters)
@@ -19,7 +24,7 @@ const conferenceResolvers = {
   },
   Conference: {
     type: async ({ conferenceTypeId }, _params, { dataLoaders }, _info) => {
-      const conferenceType = await dataLoaders.conferenceTypeById.load(conferenceTypeId)
+      const conferenceType = conferenceTypeId && (await dataLoaders.conferenceTypeById.load(conferenceTypeId))
       return conferenceType
     },
     category: async ({ categoryId }, _params, { dataLoaders }, _info) => {
@@ -67,26 +72,26 @@ const conferenceResolvers = {
       return statusId
     },
     join: async (_parent, { input }, { dataSources }, _info) => {
-      const updateInput = { ...input, statusId: status.Joined}
+      const updateInput = { ...input, statusId: status.Joined }
       const statusId = await dataSources.conferenceDb.updateConferenceXAttendee(updateInput)
       return statusId
     },
     saveConference: async (_parent, { input }, { dataSources }, _info) => {
       const location = await dataSources.conferenceDb.updateLocation(input.location)
-      const updateConference = await dataSources.conferenceDb.updateConference({ ...input, location })
+      const updatedConference = await dataSources.conferenceDb.updateConference({ ...input, location })
       const speakers = await Promise.all(
         input.speakers.map(async speaker => {
-          const updateSpeaker = await dataSources.conferenceDb.updateSpeaker(speaker)
+          const updatedSpeaker = await dataSources.conferenceDb.updateSpeaker(speaker)
           const isMainSpeaker = await dataSources.conferenceDb.updateConferenceXSpeaker({
-            speakerId: updateSpeaker.id,
+            speakerId: updatedSpeaker.id,
             isMainSpeaker: speaker.isMainSpeaker,
-            conferenceId: updateConference.id
+            conferenceId: updatedConference.id
           })
-          return { ...updateSpeaker, isMainSpeaker }
+          return { ...updatedSpeaker, isMainSpeaker }
         })
       )
-      input.deleteSpeakers?.length > 0 && (await dataSources.conferenceDb.deleteSpeakers(input.deleteSpeakers))
-      return { ...updateConference, location, speakers }
+      input?.deleteSpeakers?.length > 0 && (await dataSources.conferenceDb.deleteSpeakers(input.deleteSpeakers))
+      return { ...updatedConference, location, speakers }
     }
   }
 }

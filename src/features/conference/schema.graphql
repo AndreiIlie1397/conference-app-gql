@@ -1,11 +1,17 @@
 extend type Query {
   conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
   conference(id: ID!): Conference
+  users(id: ID!): [UsersList]
+}
+
+type UsersList {
+  attendeeEmail: String
 }
 
 type Conference {
   id: ID!
   name: String!
+  organizerEmail: String
   startDate: DateTime!
   endDate: DateTime!
   type: Type
